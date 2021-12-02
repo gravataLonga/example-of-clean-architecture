@@ -1,0 +1,52 @@
+{
+    "name": ":vendor/:package_name",
+    "type": "library",
+    "description": ":package_description",
+    "keywords": [
+        ":vendor",
+        ":package_name"
+    ],
+    "homepage": "https://github.com/:vendor/:package_name",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": ":author_name",
+            "email": ":author_email",
+            "homepage": ":author_website",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php" : "~7.4"
+    },
+    "require-dev": {
+        "phpstan/phpstan": "^0.12.83",
+        "friendsofphp/php-cs-fixer": "^2.18",
+        "phpunit/phpunit": "^9",
+        "infection/infection": "^0.21.5",
+        "phly/keep-a-changelog": "^2.11"
+    },
+    "autoload": {
+        "psr-4": {
+            ":vendor\\:package_name\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests"
+        }
+    },
+    "scripts": {
+        "phpstan": "phpstan analyze -l max src",
+        "fix-style": "php-cs-fixer src tests",
+        "test": "XDEBUG_MODE=coverage phpunit"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    }
+}
