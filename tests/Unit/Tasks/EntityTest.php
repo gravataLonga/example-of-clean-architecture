@@ -12,7 +12,7 @@ class EntityTest extends TestCase
     /**
      * @test
      */
-    public function is_not_done_recently_created_task ()
+    public function is_not_done_recently_created_task()
     {
         $task = new Task('you can done this?');
         $this->assertFalse($task->isDone());
@@ -21,7 +21,7 @@ class EntityTest extends TestCase
     /**
      * @test
      */
-    public function can_mark_done_task ()
+    public function can_mark_done_task()
     {
         $task = new Task('you can done this?');
 
@@ -33,7 +33,7 @@ class EntityTest extends TestCase
     /**
      * @test
      */
-    public function cant_create_empty_task ()
+    public function cant_create_empty_task()
     {
         $this->expectException(TaskException::class);
         $this->expectExceptionMessage('task required to have a title');
@@ -44,7 +44,7 @@ class EntityTest extends TestCase
     /**
      * @test
      */
-    public function can_add_due_date ()
+    public function can_add_due_date()
     {
         $task = new Task("my title");
         $task->dueAt(new DateTime("+1 day"));
@@ -56,7 +56,7 @@ class EntityTest extends TestCase
     /**
      * @test
      */
-    public function if_not_set_due_isnt_not_due ()
+    public function if_not_set_due_isnt_not_due()
     {
         $task = new Task("my title");
 
@@ -67,7 +67,7 @@ class EntityTest extends TestCase
     /**
      * @test
      */
-    public function can_be_overdue ()
+    public function can_be_overdue()
     {
         $task = new Task("my title");
         $task->dueAt(new DateTime("-1 day"));
@@ -92,14 +92,14 @@ class EntityTest extends TestCase
      * @test
      * @dataProvider dataProviderCastToString
      */
-    public function can_cast_to_any_state_to_string (string $title, bool $isDone, ?DateTime $due, string $expected)
+    public function can_cast_to_any_state_to_string(string $title, bool $isDone, ?DateTime $due, string $expected)
     {
         $task = new Task($title);
-        if (!empty($due)) {
+        if (! empty($due)) {
             $task->dueAt($due);
         }
 
-        if (!empty($isDone)) {
+        if (! empty($isDone)) {
             $task->done();
         }
 
@@ -113,26 +113,26 @@ class EntityTest extends TestCase
                 'testing',
                 false,
                 null,
-                ' [ ] testing'
+                ' [ ] testing',
             ],
             [
                 'abc',
                 true,
                 null,
-                ' [x] abc'
+                ' [x] abc',
             ],
             [
                 '123',
                 false,
                 DateTime::createFromFormat('Y-m-d H:i:s', '2021-01-01 00:00:00'),
-                ' [ ] 123 (Due at: 2021-01-01 00:00:00)'
+                ' [ ] 123 (Due at: 2021-01-01 00:00:00)',
             ],
             [
                 'etc',
                 true,
                 DateTime::createFromFormat('Y-m-d H:i:s', '2021-01-01 00:00:00'),
-                ' [x] etc (Due at: 2021-01-01 00:00:00)'
-            ]
+                ' [x] etc (Due at: 2021-01-01 00:00:00)',
+            ],
         ];
     }
 }

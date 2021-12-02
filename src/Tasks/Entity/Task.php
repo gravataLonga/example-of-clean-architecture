@@ -22,7 +22,7 @@ class Task implements Stringable
         $this->title = $title;
     }
 
-    public function dueAt(DateTime $due)
+    public function dueAt(DateTime $due): void
     {
         $this->due = $due;
     }
@@ -55,8 +55,9 @@ class Task implements Stringable
     {
         return sprintf(
             ' [%s] %s%s',
-            $this->isDone() ? 'x' : ' ', $this->title,
-            !empty($this->due()) ? ' (Due at: ' . $this->due->format('Y-m-d H:i:s') . ')' : ''
+            $this->isDone() ? 'x' : ' ',
+            $this->title,
+            ! empty($this->due) ? ' (Due at: ' . $this->due->format('Y-m-d H:i:s') . ')' : ''
         );
     }
 }

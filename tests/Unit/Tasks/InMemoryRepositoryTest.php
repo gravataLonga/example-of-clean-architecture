@@ -3,7 +3,6 @@
 namespace Tests\Unit\Tasks;
 
 use Gravatalonga\Example\Tasks\Application\TaskRepositoryDto;
-use Gravatalonga\Example\Tasks\Entity\Task;
 use Gravatalonga\Example\Tasks\Infrastructure\InMemoryRepository;
 use PHPUnit\Framework\TestCase;
 
@@ -12,7 +11,7 @@ class InMemoryRepositoryTest extends TestCase
     /**
      * @test
      */
-    public function it_created_on_repository ()
+    public function it_created_on_repository()
     {
         $repository = new InMemoryRepository();
         $taskTransferredDataObject = new TaskRepositoryDto(
@@ -29,7 +28,7 @@ class InMemoryRepositoryTest extends TestCase
     /**
      * @test
      */
-    public function it_can_find_by_uuid ()
+    public function it_can_find_by_uuid()
     {
         $taskTransferredDataObject = new TaskRepositoryDto(
             title: "My title",
@@ -47,7 +46,7 @@ class InMemoryRepositoryTest extends TestCase
     /**
      * @test
      */
-    public function if_cant_find_return_null ()
+    public function if_cant_find_return_null()
     {
         $repository = new InMemoryRepository();
 
@@ -59,7 +58,7 @@ class InMemoryRepositoryTest extends TestCase
     /**
      * @test
      */
-    public function can_update_task ()
+    public function can_update_task()
     {
         $taskTransferredDataObject = new TaskRepositoryDto(
             title: "My title",
@@ -78,7 +77,7 @@ class InMemoryRepositoryTest extends TestCase
     /**
      * @test
      */
-    public function cant_update_if_cant_find ()
+    public function cant_update_if_cant_find()
     {
         $repository = new InMemoryRepository();
 
@@ -92,7 +91,7 @@ class InMemoryRepositoryTest extends TestCase
     /**
      * @test
      */
-    public function mark_done_task ()
+    public function mark_done_task()
     {
         $taskTransferredDataObject = new TaskRepositoryDto(
             title: "My title",
@@ -109,7 +108,7 @@ class InMemoryRepositoryTest extends TestCase
     /**
      * @test
      */
-    public function cant_toggle_done_if_cant_found ()
+    public function cant_toggle_done_if_cant_found()
     {
         $repository = new InMemoryRepository();
 

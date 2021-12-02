@@ -7,8 +7,14 @@ use Gravatalonga\Example\Tasks\Application\TaskRepositoryDto;
 
 class InMemoryRepository implements RepositoryInterface
 {
+    /**
+     * @var array<string, TaskRepositoryDto>
+     */
     public array $records = [];
 
+    /**
+     * @param array<string, TaskRepositoryDto> $records
+     */
     public function __construct(array $records = [])
     {
         $this->records = $records;
@@ -17,6 +23,7 @@ class InMemoryRepository implements RepositoryInterface
     public function create(string $uuid, TaskRepositoryDto $dto): bool
     {
         $this->records[$uuid] = $dto;
+
         return true;
     }
 
@@ -32,6 +39,7 @@ class InMemoryRepository implements RepositoryInterface
         }
 
         $this->records[$uuid] = $dto;
+
         return true;
     }
 
@@ -41,7 +49,8 @@ class InMemoryRepository implements RepositoryInterface
             return false;
         }
 
-        $this->records[$uuid]->isDone = !$this->records[$uuid]->isDone;
+        $this->records[$uuid]->isDone = ! $this->records[$uuid]->isDone;
+
         return true;
     }
 }
