@@ -123,7 +123,7 @@ class InMemoryRepositoryTest extends TestCase
     /**
      * @test
      */
-    public function can_delete_task ()
+    public function can_delete_task()
     {
         $taskTransferredDataObject = new TaskDto(
             uuid: '0001',
@@ -141,7 +141,7 @@ class InMemoryRepositoryTest extends TestCase
     /**
      * @test
      */
-    public function if_record_cant_be_found_return_false ()
+    public function if_record_cant_be_found_return_false()
     {
         $repository = new InMemoryRepository();
 
@@ -153,7 +153,7 @@ class InMemoryRepositoryTest extends TestCase
     /**
      * @test
      */
-    public function can_list_all_with_pagination ()
+    public function can_list_all_with_pagination()
     {
         $taskTransferredDataObjectOne = new TaskDto(
             uuid: '0001',
@@ -167,7 +167,7 @@ class InMemoryRepositoryTest extends TestCase
         );
         $repository = new InMemoryRepository([
             $taskTransferredDataObjectOne,
-            $taskTransferredDataObjectTwo
+            $taskTransferredDataObjectTwo,
         ]);
 
         $page1 = $repository->paginate(0, 1);

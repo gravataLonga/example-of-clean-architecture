@@ -70,7 +70,8 @@ class InMemoryRepository implements RepositoryInterface
             return false;
         }
 
-        $dto->isDone = !$dto->isDone;
+        $dto->isDone = ! $dto->isDone;
+
         return $this->update($uuid, $dto);
     }
 

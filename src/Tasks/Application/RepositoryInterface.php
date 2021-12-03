@@ -15,5 +15,4 @@ interface RepositoryInterface
     public function toggleDone(string $uuid): bool;
 
     public function destroy(string $uuid): bool;
-
 }
