@@ -5,8 +5,10 @@ namespace Gravatalonga\Example\Tasks\Application;
 use DateTime;
 use Spatie\DataTransferObject\DataTransferObject;
 
-class TaskRepositoryDto extends DataTransferObject
+class TaskDto extends DataTransferObject
 {
+    public ?string $uuid;
+
     public string $title;
 
     public bool $isDone = false;

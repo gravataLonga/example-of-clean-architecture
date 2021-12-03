@@ -3,53 +3,86 @@
 namespace Gravatalonga\Example\Tasks\Infrastructure;
 
 use Gravatalonga\Example\Tasks\Application\RepositoryInterface;
-use Gravatalonga\Example\Tasks\Application\TaskRepositoryDto;
+use Gravatalonga\Example\Tasks\Application\TaskDto;
 
 class InMemoryRepository implements RepositoryInterface
 {
     /**
-     * @var array<string, TaskRepositoryDto>
+     * @var array<string, TaskDto>
      */
     public array $records = [];
 
     /**
-     * @param array<string, TaskRepositoryDto> $records
+     * @param array<string, TaskDto> $records
      */
     public function __construct(array $records = [])
     {
         $this->records = $records;
     }
 
-    public function create(string $uuid, TaskRepositoryDto $dto): bool
+    public function create(string $uuid, TaskDto $dto): bool
     {
-        $this->records[$uuid] = $dto;
+        $dto->uuid = $uuid;
+        $this->records[] = $dto;
 
         return true;
     }
 
-    public function find(string $uuid): ?TaskRepositoryDto
+    public function find(string $uuid): ?TaskDto
     {
-        return $this->records[$uuid] ?? null;
+        $record = array_filter($this->records, function ($item) use ($uuid) {
+            return $item->uuid === $uuid;
+        });
+
+        if (empty($record)) {
+            return null;
+        }
+
+        return $record[0];
     }
 
-    public function update(string $uuid, TaskRepositoryDto $dto): bool
+    public function paginate(int $offset, int $limit): array
     {
-        if (false === array_key_exists($uuid, $this->records)) {
+        return array_slice($this->records, $offset, $limit);
+    }
+
+    public function update(string $uuid, TaskDto $dto): bool
+    {
+        if (empty($this->find($uuid))) {
             return false;
         }
 
-        $this->records[$uuid] = $dto;
+        $this->records = array_map(function ($item) use ($uuid, $dto) {
+            if ($item->uuid !== $uuid) {
+                return $item;
+            }
+
+            return $dto;
+        }, $this->records);
 
         return true;
     }
 
     public function toggleDone(string $uuid): bool
     {
-        if (false === array_key_exists($uuid, $this->records)) {
+        $dto = $this->find($uuid);
+        if (empty($dto)) {
             return false;
         }
 
-        $this->records[$uuid]->isDone = ! $this->records[$uuid]->isDone;
+        $dto->isDone = !$dto->isDone;
+        return $this->update($uuid, $dto);
+    }
+
+    public function destroy(string $uuid): bool
+    {
+        if ($this->find($uuid) === null) {
+            return false;
+        }
+
+        $this->records = array_filter($this->records, function ($item) use ($uuid) {
+            return $uuid !== $item->uuid;
+        });
 
         return true;
     }

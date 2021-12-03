@@ -2,7 +2,7 @@
 
 namespace Tests\Unit\Tasks;
 
-use Gravatalonga\Example\Tasks\Application\TaskRepositoryDto;
+use Gravatalonga\Example\Tasks\Application\TaskDto;
 use Gravatalonga\Example\Tasks\Infrastructure\InMemoryRepository;
 use PHPUnit\Framework\TestCase;
 
@@ -14,7 +14,7 @@ class InMemoryRepositoryTest extends TestCase
     public function it_created_on_repository()
     {
         $repository = new InMemoryRepository();
-        $taskTransferredDataObject = new TaskRepositoryDto(
+        $taskTransferredDataObject = new TaskDto(
             title: "My title",
             isDone: false
         );
@@ -30,11 +30,12 @@ class InMemoryRepositoryTest extends TestCase
      */
     public function it_can_find_by_uuid()
     {
-        $taskTransferredDataObject = new TaskRepositoryDto(
+        $taskTransferredDataObject = new TaskDto(
+            uuid: '0001',
             title: "My title",
             isDone: false
         );
-        $repository = new InMemoryRepository(['0001' => $taskTransferredDataObject]);
+        $repository = new InMemoryRepository([$taskTransferredDataObject]);
 
         $dto = $repository->find('0001');
 
@@ -60,18 +61,19 @@ class InMemoryRepositoryTest extends TestCase
      */
     public function can_update_task()
     {
-        $taskTransferredDataObject = new TaskRepositoryDto(
+        $taskTransferredDataObject = new TaskDto(
+            uuid: '0001',
             title: "My title",
             isDone: false
         );
-        $repository = new InMemoryRepository(['0001' => $taskTransferredDataObject]);
+        $repository = new InMemoryRepository([$taskTransferredDataObject]);
 
-        $result = $repository->update('0001', new TaskRepositoryDto(
+        $result = $repository->update('0001', new TaskDto(
             title: 'My updated title'
         ));
 
         $this->assertTrue($result);
-        $this->assertEquals('My updated title', $repository->records['0001']->title);
+        $this->assertEquals('My updated title', $repository->records[0]->title);
     }
 
     /**
@@ -81,7 +83,7 @@ class InMemoryRepositoryTest extends TestCase
     {
         $repository = new InMemoryRepository();
 
-        $result = $repository->update('0001', new TaskRepositoryDto(
+        $result = $repository->update('0001', new TaskDto(
             title: 'My updated title'
         ));
 
@@ -93,16 +95,17 @@ class InMemoryRepositoryTest extends TestCase
      */
     public function mark_done_task()
     {
-        $taskTransferredDataObject = new TaskRepositoryDto(
+        $taskTransferredDataObject = new TaskDto(
+            uuid: '0001',
             title: "My title",
             isDone: false
         );
-        $repository = new InMemoryRepository(['0001' => $taskTransferredDataObject]);
+        $repository = new InMemoryRepository([$taskTransferredDataObject]);
 
         $result = $repository->toggleDone('0001');
 
         $this->assertTrue($result);
-        $this->assertTrue($repository->records['0001']->isDone);
+        $this->assertTrue($repository->records[0]->isDone);
     }
 
     /**
@@ -115,5 +118,66 @@ class InMemoryRepositoryTest extends TestCase
         $result = $repository->toggleDone('0001');
 
         $this->assertFalse($result);
+    }
+
+    /**
+     * @test
+     */
+    public function can_delete_task ()
+    {
+        $taskTransferredDataObject = new TaskDto(
+            uuid: '0001',
+            title: "My title",
+            isDone: false
+        );
+        $repository = new InMemoryRepository([$taskTransferredDataObject]);
+
+        $result = $repository->destroy('0001');
+
+        $this->assertTrue($result);
+        $this->assertEmpty($repository->records);
+    }
+
+    /**
+     * @test
+     */
+    public function if_record_cant_be_found_return_false ()
+    {
+        $repository = new InMemoryRepository();
+
+        $result = $repository->destroy('0001');
+
+        $this->assertFalse($result);
+    }
+
+    /**
+     * @test
+     */
+    public function can_list_all_with_pagination ()
+    {
+        $taskTransferredDataObjectOne = new TaskDto(
+            uuid: '0001',
+            title: "My title One",
+            isDone: false
+        );
+        $taskTransferredDataObjectTwo = new TaskDto(
+            uuid: '0002',
+            title: "My title Two",
+            isDone: false
+        );
+        $repository = new InMemoryRepository([
+            $taskTransferredDataObjectOne,
+            $taskTransferredDataObjectTwo
+        ]);
+
+        $page1 = $repository->paginate(0, 1);
+        $page2 = $repository->paginate(1, 1);
+        $page3 = $repository->paginate(2, 1);
+
+        $this->assertNotEmpty($page1);
+        $this->assertNotEmpty($page2);
+        $this->assertEmpty($page3);
+        $this->assertInstanceOf(TaskDto::class, $page1[0]);
+        $this->assertInstanceOf(TaskDto::class, $page2[0]);
     }
 }
