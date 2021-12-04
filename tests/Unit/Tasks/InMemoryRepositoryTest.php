@@ -3,6 +3,7 @@
 namespace Tests\Unit\Tasks;
 
 use Gravatalonga\Example\Tasks\Application\TaskDto;
+use Gravatalonga\Example\Tasks\Entity\Task;
 use Gravatalonga\Example\Tasks\Infrastructure\InMemoryRepository;
 use PHPUnit\Framework\TestCase;
 
@@ -14,9 +15,9 @@ class InMemoryRepositoryTest extends TestCase
     public function it_created_on_repository()
     {
         $repository = new InMemoryRepository();
+        $task = new Task("My title");
         $taskTransferredDataObject = new TaskDto(
-            title: "My title",
-            isDone: false
+            task: $task
         );
 
         $result = $repository->create('1234567', $taskTransferredDataObject);
@@ -30,18 +31,17 @@ class InMemoryRepositoryTest extends TestCase
      */
     public function it_can_find_by_uuid()
     {
+        $task = new Task("My title");
         $taskTransferredDataObject = new TaskDto(
             uuid: '0001',
-            title: "My title",
-            isDone: false
+            task: $task
         );
         $repository = new InMemoryRepository([$taskTransferredDataObject]);
 
         $dto = $repository->find('0001');
 
         $this->assertNotEmpty($dto);
-        $this->assertEquals('My title', $dto->title);
-        $this->assertEquals(false, $dto->isDone);
+        $this->assertEquals(' [ ] My title', (string)$dto->task);
     }
     
     /**
@@ -61,19 +61,19 @@ class InMemoryRepositoryTest extends TestCase
      */
     public function can_update_task()
     {
+        $task = new Task("My title");
         $taskTransferredDataObject = new TaskDto(
             uuid: '0001',
-            title: "My title",
-            isDone: false
+            task: $task
         );
         $repository = new InMemoryRepository([$taskTransferredDataObject]);
 
         $result = $repository->update('0001', new TaskDto(
-            title: 'My updated title'
+            task: new Task('My updated title')
         ));
 
         $this->assertTrue($result);
-        $this->assertEquals('My updated title', $repository->records[0]->title);
+        $this->assertEquals(' [ ] My updated title', (string)$repository->records[0]->task);
     }
 
     /**
@@ -84,7 +84,7 @@ class InMemoryRepositoryTest extends TestCase
         $repository = new InMemoryRepository();
 
         $result = $repository->update('0001', new TaskDto(
-            title: 'My updated title'
+            task: new Task('my other title')
         ));
 
         $this->assertFalse($result);
@@ -95,17 +95,17 @@ class InMemoryRepositoryTest extends TestCase
      */
     public function mark_done_task()
     {
+        $task = new Task("My title");
         $taskTransferredDataObject = new TaskDto(
             uuid: '0001',
-            title: "My title",
-            isDone: false
+            task: $task
         );
         $repository = new InMemoryRepository([$taskTransferredDataObject]);
 
         $result = $repository->toggleDone('0001');
 
         $this->assertTrue($result);
-        $this->assertTrue($repository->records[0]->isDone);
+        $this->assertTrue($repository->records[0]->task->isDone());
     }
 
     /**
@@ -125,10 +125,10 @@ class InMemoryRepositoryTest extends TestCase
      */
     public function can_delete_task()
     {
+        $task = new Task("My title");
         $taskTransferredDataObject = new TaskDto(
             uuid: '0001',
-            title: "My title",
-            isDone: false
+            task: $task
         );
         $repository = new InMemoryRepository([$taskTransferredDataObject]);
 
@@ -157,13 +157,11 @@ class InMemoryRepositoryTest extends TestCase
     {
         $taskTransferredDataObjectOne = new TaskDto(
             uuid: '0001',
-            title: "My title One",
-            isDone: false
+            task: new Task('My title One')
         );
         $taskTransferredDataObjectTwo = new TaskDto(
             uuid: '0002',
-            title: "My title Two",
-            isDone: false
+            task: new Task('My title Two')
         );
         $repository = new InMemoryRepository([
             $taskTransferredDataObjectOne,

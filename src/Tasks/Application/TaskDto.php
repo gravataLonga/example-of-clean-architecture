@@ -2,16 +2,12 @@
 
 namespace Gravatalonga\Example\Tasks\Application;
 
-use DateTime;
+use Gravatalonga\Example\Tasks\Entity\Task;
 use Spatie\DataTransferObject\DataTransferObject;
 
 class TaskDto extends DataTransferObject
 {
-    public ?string $uuid;
+    public ?string $uuid = null;
 
-    public string $title;
-
-    public bool $isDone = false;
-
-    public ?DateTime $dueAt = null;
+    public Task $task;
 }
