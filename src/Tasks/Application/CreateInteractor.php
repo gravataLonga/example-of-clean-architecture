@@ -24,8 +24,9 @@ class CreateInteractor
             task: $task
         );
 
-        $this->repository->create(Uuid::uuid4(), $taskDto);
+        $uuid = Uuid::uuid4();
+        $this->repository->create($uuid, $taskDto);
 
-        return new ResponseTaskDto();
+        return new ResponseTaskDto(uuid: $uuid, task: $task);
     }
 }

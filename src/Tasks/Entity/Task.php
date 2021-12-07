@@ -22,6 +22,11 @@ class Task implements Stringable
         $this->title = $title;
     }
 
+    public function title(): string
+    {
+        return $this->title;
+    }
+
     public function dueAt(DateTime $due): void
     {
         $this->due = $due;

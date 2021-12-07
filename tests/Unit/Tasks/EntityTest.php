@@ -79,6 +79,15 @@ class EntityTest extends TestCase
     /**
      * @test
      */
+    public function can_get_title ()
+    {
+        $task = new Task("my title");
+        $this->assertEquals('my title', $task->title());
+    }
+
+    /**
+     * @test
+     */
     public function get_string()
     {
         $task = new Task("my title");

@@ -30,7 +30,7 @@ class CreateInteractorTest extends TestCase
         $this->assertInstanceOf(ResponseTaskDto::class, $responseTaskDto);
         $this->assertEquals('json', $responseTaskDto->responseType());
         $this->assertEquals(201, $responseTaskDto->getStatusCode());
-        $this->assertEquals('{"uuid":"","title":"","isDone":false,"dueAt":null}', $responseTaskDto->getBody());
+        $this->assertEquals('{"uuid":"' . $repository->records[0]->uuid . '","title":"' . $repository->records[0]->task->title() . '","isDone":false,"dueAt":null}', $responseTaskDto->getBody());
         $this->assertEquals([], $responseTaskDto->getHeaders());
         $this->assertNotEmpty($repository->records);
         $this->assertCount(1, $repository->records);
